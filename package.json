@@ -1,0 +1,31 @@
+{
+  "name": "ml-finder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "ts-node src/main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.57.0",
+    "@types/node-fetch": "2.6.11",
+    "dotenv": "^17.2.1",
+    "dropbox": "^10.34.0",
+    "node-fetch": "2.6.7",
+    "puppeteer": "^24.15.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
+    "@types/puppeteer": "^7.0.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "mercadolibre-mcp-server": {
+      "command": "./start-mcp.sh",
+      "args": []
+    }
+  }
+}
