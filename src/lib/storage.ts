@@ -3,59 +3,88 @@ import * as path from 'path';
 import { ProductData } from './analyzer';
 import { MLSearchResult } from './scraper';
 
-// Interface for saved product analysis
 export interface SavedProductAnalysis {
   imagePath: string;
-  productData: ProductData;
+  productData: any;
   timestamp: string;
-  mlResults?: MLSearchResult[];
+  mlResults?: any[];
 }
 
+const PRODUCTS_FILE = 'products.json';
+const PUBLIC_PRODUCTS_FILE = 'public/data/products.json';
+
 /**
- * Load existing product analyses from products.json
+ * Load all product analyses from file
  */
 export function loadProductAnalyses(): SavedProductAnalysis[] {
-  const productsFile = path.join(process.cwd(), 'data', 'products.json');
   try {
-    if (fs.existsSync(productsFile)) {
-      const data = fs.readFileSync(productsFile, 'utf-8');
-      return JSON.parse(data);
+    if (!fs.existsSync(PRODUCTS_FILE)) {
+      return [];
     }
+    
+    const data = fs.readFileSync(PRODUCTS_FILE, 'utf8');
+    return JSON.parse(data);
   } catch (error) {
-    console.warn('⚠️  Could not load existing products.json:', error);
+    console.error('Error loading product analyses:', error);
+    return [];
   }
-  return [];
 }
 
 /**
- * Save product analysis to products.json
+ * Save a new product analysis
  */
 export function saveProductAnalysis(analysis: SavedProductAnalysis): void {
-  const productsFile = path.join(process.cwd(), 'data', 'products.json');
   try {
-    // Ensure data directory exists
-    const dataDir = path.join(process.cwd(), 'data');
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
+    const analyses = loadProductAnalyses();
     
-    const existingAnalyses = loadProductAnalyses();
+    // Remove any existing analysis for the same image path
+    const filtered = analyses.filter(a => a.imagePath !== analysis.imagePath);
     
-    // Check if this image was already analyzed
-    const existingIndex = existingAnalyses.findIndex(a => a.imagePath === analysis.imagePath);
+    // Add the new analysis
+    filtered.push(analysis);
     
-    if (existingIndex >= 0) {
-      // Update existing analysis
-      existingAnalyses[existingIndex] = analysis;
-      console.log('🔄 Updated existing analysis in data/products.json');
-    } else {
-      // Add new analysis
-      existingAnalyses.push(analysis);
-      console.log('💾 Saved new analysis to data/products.json');
-    }
+    // Save to JSON file
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(filtered, null, 2));
     
-    fs.writeFileSync(productsFile, JSON.stringify(existingAnalyses, null, 2));
+    // Also copy to public directory for frontend access
+    copyProductsToPublic(filtered);
+    
+    console.log(`💾 Saved analysis for: ${analysis.imagePath}`);
   } catch (error) {
-    console.error('❌ Could not save to data/products.json:', error);
+    console.error('Error saving product analysis:', error);
+    throw error;
   }
+}
+
+/**
+ * Copy products JSON to public directory for frontend access
+ */
+function copyProductsToPublic(products: SavedProductAnalysis[]): void {
+  try {
+    // Ensure public/data directory exists
+    const publicDir = path.dirname(PUBLIC_PRODUCTS_FILE);
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+    
+    // Create the data object to save
+    const publicData = {
+      products,
+      lastUpdated: new Date().toISOString(),
+      productCount: products.length
+    };
+    
+    fs.writeFileSync(PUBLIC_PRODUCTS_FILE, JSON.stringify(publicData, null, 2));
+    console.log(`📦 Copied products.json to public/data with ${products.length} products`);
+  } catch (error) {
+    console.error('Error copying products to public directory:', error);
+  }
+}
+
+/**
+ * Initialize public data from existing products.json
+ */
+export function initializePublicData(): void {
+  const products = loadProductAnalyses();
+  copyProductsToPublic(products);
 }

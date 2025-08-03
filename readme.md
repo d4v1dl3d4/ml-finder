@@ -59,6 +59,11 @@ pnpm run dev -- --dropbox
 # or set USE_DROPBOX=true in .env
 ```
 
+**Webhook server (automatic processing)**:
+```bash
+pnpm run webhook
+```
+
 **Production build**:
 ```bash
 pnpm run build
@@ -91,6 +96,48 @@ To use Dropbox integration:
    - Create a folder in your Dropbox (e.g., `/ML-IMAGES`)
    - Upload product images to this folder
    - Set `DROPBOX_FOLDER=/ML-IMAGES` in your `.env` file
+
+## Webhook Setup (Automatic Processing)
+
+For automatic processing when new images are uploaded to Dropbox:
+
+1. **Deploy your webhook server**:
+   - Deploy the application to a server with a public URL (e.g., Heroku, Vercel, AWS)
+   - Or use a tunneling service like ngrok for local development:
+     ```bash
+     npx ngrok http 3000
+     ```
+
+2. **Configure webhook in Dropbox App Console**:
+   - Go to your app in [Dropbox App Console](https://www.dropbox.com/developers/apps)
+   - Navigate to the "Webhooks" tab
+   - Add your webhook URL: `https://yourdomain.com/webhook`
+   - Save and note the webhook secret
+
+3. **Update environment variables**:
+   ```bash
+   WEBHOOK_URL=https://yourdomain.com/webhook
+   DROPBOX_WEBHOOK_SECRET=your_webhook_secret_from_console
+   WEBHOOK_PORT=3000
+   ```
+
+4. **Start the webhook server**:
+   ```bash
+   pnpm run webhook
+   ```
+
+5. **Test automatic processing**:
+   - Upload a new image to your Dropbox folder
+   - The webhook will automatically trigger image processing
+   - Check the console logs for processing status
+
+### Webhook Features
+
+- ✅ **Automatic Processing**: Processes images immediately when uploaded
+- ✅ **Signature Verification**: Validates webhook authenticity
+- ✅ **Selective Processing**: Only processes image files in monitored folder
+- ✅ **Error Handling**: Graceful error handling and logging
+- ✅ **Health Checks**: `/health` endpoint for monitoring
 
 ## How it works
 
@@ -127,6 +174,7 @@ To use Dropbox integration:
 - **@anthropic-ai/sdk**: Claude AI integration
 - **dotenv**: Environment variable management
 - **dropbox**: Dropbox API integration
+- **express**: Web server for webhook handling
 - **node-fetch@2.6.7**: HTTP client (v2 required for Dropbox SDK compatibility)
 - **puppeteer**: Web scraping for Mercado Libre
 - **typescript**: TypeScript support

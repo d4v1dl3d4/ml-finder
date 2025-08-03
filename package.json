@@ -7,6 +7,9 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "dev": "ts-node src/main.ts",
+    "frontend": "ts-node src/frontend-server.ts",
+    "webhook": "ts-node src/webhook-server.ts",
+    "setup-webhook": "ts-node src/setup-webhook.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,8 +21,10 @@
     "@types/node-fetch": "2.6.11",
     "dotenv": "^17.2.1",
     "dropbox": "^10.34.0",
+    "express": "^5.1.0",
     "node-fetch": "2.6.7",
-    "puppeteer": "^24.15.0"
+    "puppeteer": "^24.15.0",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

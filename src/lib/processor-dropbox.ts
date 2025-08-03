@@ -18,11 +18,50 @@ export async function processDropboxImages(dropboxFolder: string = ''): Promise<
     // Initialize Dropbox service
     dropboxService = new DropboxService();
     
-    // Download all images organized by folders
-    const organizedImages = await dropboxService.downloadAllImages(tempDir, dropboxFolder);
+    // Get list of images from Dropbox without downloading
+    console.log('📋 Getting list of images from Dropbox...');
+    const dropboxImages = await dropboxService.listImages(dropboxFolder);
+    
+    if (dropboxImages.length === 0) {
+      console.log('No images found in Dropbox');
+      return;
+    }
+    
+    console.log(`📸 Found ${dropboxImages.length} images in Dropbox`);
+    
+    // Load existing analyses to check what we already have
+    const existingAnalyses = loadProductAnalyses();
+    
+    // Filter out images that are already processed
+    const imagesToProcess = dropboxImages.filter(image => {
+      const imageFileName = image.name;
+      const expectedImagePath = `images/${image.localPath.split('/')[0]}/${imageFileName}`;
+      
+      const alreadyProcessed = existingAnalyses.some(analysis => 
+        analysis.imagePath.includes(imageFileName) ||
+        analysis.imagePath === expectedImagePath
+      );
+      
+      if (alreadyProcessed) {
+        console.log(`⏭️  Skipping already processed image: ${imageFileName}`);
+        return false;
+      }
+      
+      return true;
+    });
+    
+    if (imagesToProcess.length === 0) {
+      console.log('✅ All Dropbox images have already been processed');
+      return;
+    }
+    
+    console.log(`🔄 Processing ${imagesToProcess.length} new images (${dropboxImages.length - imagesToProcess.length} already processed)`);
+    
+    // Download and process only the new images
+    const organizedImages = await dropboxService.downloadSelectedImages(tempDir, imagesToProcess);
     
     if (Object.keys(organizedImages).length === 0) {
-      console.log('No image folders found in Dropbox');
+      console.log('No new image folders to process');
       return;
     }
 
@@ -32,68 +71,86 @@ export async function processDropboxImages(dropboxFolder: string = ''): Promise<
       console.log(`\n${'='.repeat(50)}`);
       console.log(`📂 Processing product: ${folderName}`);
       
-      if (imagePaths.length === 0) {
+      if (!Array.isArray(imagePaths) || imagePaths.length === 0) {
         console.log(`No images found in ${folderName}`);
         continue;
       }
 
-      // Use the first image for analysis
-      const firstImage = imagePaths[0];
-      console.log(`📸 Analyzing image: ${path.basename(firstImage)}`);
-      
-      // Convert to relative path for storage
-      const relativePath = path.relative(process.cwd(), firstImage);
-      
-      // Check if this image was already analyzed
-      const existingAnalyses = loadProductAnalyses();
-      const existingAnalysis = existingAnalyses.find(a => 
-        a.imagePath === relativePath || 
-        a.imagePath.includes(path.basename(firstImage))
-      );
-      
-      let productData: ProductData;
-      let mlResults: MLSearchResult[];
-      
-      if (existingAnalysis) {
-        console.log('♻️  Found existing analysis, using cached data');
-        productData = existingAnalysis.productData;
-        mlResults = existingAnalysis.mlResults || [];
-      } else {
-        // Analyze the product
-        productData = await analyzeProductImage(firstImage);
-        console.log('📋 Product data extracted:');
-        console.log(JSON.stringify(productData, null, 2));
+      console.log(`📸 Found ${imagePaths.length} images in folder: ${imagePaths.map((p: string) => path.basename(p)).join(', ')}`);
+
+      // Process each image in the folder
+      for (let i = 0; i < imagePaths.length; i++) {
+        const currentImage = imagePaths[i];
+        const imageNumber = imagePaths.length > 1 ? ` (${i + 1}/${imagePaths.length})` : '';
         
-        // Search for products in Mercado Libre
-        console.log('\n🔎 Searching Mercado Libre...');
-        mlResults = await searchMLProducts(productData);
+        console.log(`\n📸 Analyzing image: ${path.basename(currentImage)}${imageNumber}`);
         
-        // Create analysis object for saving (use a more permanent relative path)
-        const permanentPath = `dropbox/${folderName}/${path.basename(firstImage)}`;
-        const analysis: SavedProductAnalysis = {
-          imagePath: permanentPath,
-          productData,
-          timestamp: new Date().toISOString(),
-          mlResults
-        };
+        // Copy the resized image to public folder for frontend access
+        const publicImageDir = path.join(process.cwd(), 'public', 'images', folderName);
+        if (!fs.existsSync(publicImageDir)) {
+          fs.mkdirSync(publicImageDir, { recursive: true });
+        }
         
-        // Save the analysis to products.json
-        saveProductAnalysis(analysis);
+        const imageFileName = path.basename(currentImage);
+        const publicImagePath = path.join(publicImageDir, imageFileName);
+        fs.copyFileSync(currentImage, publicImagePath);
+        console.log(`📁 Copied resized image to public folder: images/${folderName}/${imageFileName}`);
+        
+        // Use public image path for storage
+        const relativeImagePath = `images/${folderName}/${imageFileName}`;
+        
+        // Convert to relative path for storage
+        const relativePath = path.relative(process.cwd(), currentImage);
+        
+        // Check if this image was already analyzed
+        const existingAnalyses = loadProductAnalyses();
+        const existingAnalysis = existingAnalyses.find(a => 
+          a.imagePath === relativePath || 
+          a.imagePath === relativeImagePath ||
+          a.imagePath.includes(path.basename(currentImage))
+        );
+        
+        let productData: ProductData;
+        let mlResults: MLSearchResult[];
+        
+        if (existingAnalysis) {
+          console.log('♻️  Found existing analysis, using cached data');
+          productData = existingAnalysis.productData;
+          mlResults = existingAnalysis.mlResults || [];
+        } else {
+          // Analyze the product
+          productData = await analyzeProductImage(currentImage);
+          console.log('📋 Product data extracted:');
+          console.log(JSON.stringify(productData, null, 2));
+          
+          // Search for products in Mercado Libre
+          console.log('\n🔎 Searching Mercado Libre...');
+          mlResults = await searchMLProducts(productData);
+          
+          // Create analysis object for saving (use public image path)
+          const analysis: SavedProductAnalysis = {
+            imagePath: relativeImagePath,
+            productData,
+            timestamp: new Date().toISOString(),
+            mlResults
+          };
+          
+          // Save the analysis to products.json
+          saveProductAnalysis(analysis);
+        }
+        
+        if (mlResults.length === 0) {
+          console.log('❌ No products found in Mercado Libre');
+        } else {
+          console.log(`✅ Found ${mlResults.length} product(s):`);
+          mlResults.forEach((product, index) => {
+            console.log(`\n${index + 1}. ${product.title}`);
+            console.log(`   💰 Price: $${product.price}`);
+            console.log(`   🔗 URL: ${product.permalink}`);
+            console.log(`   📦 Condition: ${product.condition}`);
+          });
+        }
       }
-      
-      if (mlResults.length === 0) {
-        console.log('❌ No products found in Mercado Libre');
-      } else {
-        console.log(`✅ Found ${mlResults.length} product(s):`);
-        mlResults.forEach((product, index) => {
-          console.log(`\n${index + 1}. ${product.title}`);
-          console.log(`   💰 Price: $${product.price}`);
-          console.log(`   🔗 URL: ${product.permalink}`);
-          console.log(`   📦 Condition: ${product.condition}`);
-        });
-      }
-      
-      console.log('\n' + '='.repeat(50));
     }
   } catch (error) {
     console.error('Error processing Dropbox images:', error);

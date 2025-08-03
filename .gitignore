@@ -10,6 +10,17 @@ lerna-debug.log*
 data/*
 !data/.gitkeep
 
+# User images for local analysis (but keep the directory structure)
+images/*
+!images/.gitkeep
+
+# Generated images (but keep the directory structure)
+public/images/*
+!public/images/.gitkeep
+
+# Auto-generated products module
+public/products.js
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

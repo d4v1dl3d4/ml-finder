@@ -2,6 +2,7 @@ import * as path from 'path';
 import { config } from 'dotenv';
 import { processProductImages } from './lib/processor';
 import { processDropboxImages } from './lib/processor-dropbox';
+import { initializePublicData } from './lib/storage';
 
 // Load environment variables first, before any other modules
 config();
@@ -12,6 +13,10 @@ config();
 async function main(): Promise<void> {
   try {
     console.log('🚀 Starting ML Product Finder...');
+    
+    // Initialize public data from existing products
+    console.log('📋 Initializing public data...');
+    initializePublicData();
     
     // Check if we should use Dropbox or local images
     const useDropbox = process.env.USE_DROPBOX === 'true' || process.argv.includes('--dropbox');

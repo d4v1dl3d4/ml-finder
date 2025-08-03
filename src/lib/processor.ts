@@ -3,9 +3,10 @@ import * as path from 'path';
 import { analyzeProductImage, ProductData } from './analyzer';
 import { searchMLProducts, MLSearchResult } from './scraper';
 import { loadProductAnalyses, saveProductAnalysis, SavedProductAnalysis } from './storage';
+import { ImageProcessor } from './image-processor';
 
 /**
- * Process all product images in a directory
+ * Process product images from local directory
  */
 export async function processProductImages(imagesDir: string): Promise<void> {
   try {
@@ -24,6 +25,9 @@ export async function processProductImages(imagesDir: string): Promise<void> {
     }
 
     console.log(`Found ${productDirs.length} product directories`);
+    
+    // Load existing analyses to check what we already have
+    const existingAnalyses = loadProductAnalyses();
 
     for (const productDir of productDirs) {
       console.log(`\n${'='.repeat(50)}`);
@@ -39,13 +43,50 @@ export async function processProductImages(imagesDir: string): Promise<void> {
       }
 
       // Use the first image for analysis
-      const firstImage = path.join(productPath, imageFiles[0]);
-      console.log(`📸 Analyzing image: ${imageFiles[0]}`);
+      const firstImageFile = imageFiles[0];
+      const firstImage = path.join(productPath, firstImageFile);
       
-      // Check if this image was already analyzed
-      const existingAnalyses = loadProductAnalyses();
+      // Check if this image is already processed
+      const expectedImagePath = `images/${productDir}/${firstImageFile}`;
+      const alreadyProcessed = existingAnalyses.some(analysis => 
+        analysis.imagePath === expectedImagePath ||
+        analysis.imagePath.includes(firstImageFile)
+      );
+      
+      if (alreadyProcessed) {
+        console.log(`⏭️  Skipping already processed image: ${firstImageFile}`);
+        continue;
+      }
+      
+      console.log(`📸 Analyzing new image: ${firstImageFile}`);
+      
+      // Resize image if needed and copy to public folder
+      const publicImageDir = path.join(process.cwd(), 'public', 'images', productDir);
+      if (!fs.existsSync(publicImageDir)) {
+        fs.mkdirSync(publicImageDir, { recursive: true });
+      }
+      
+      const publicImagePath = path.join(publicImageDir, firstImageFile);
+      const needsResize = await ImageProcessor.needsResizing(firstImage);
+      
+      if (needsResize) {
+        console.log('🖼️  Resizing and copying image to public folder...');
+        await ImageProcessor.resizeImage(firstImage, publicImagePath);
+      } else {
+        // Just copy the image if no resize needed
+        fs.copyFileSync(firstImage, publicImagePath);
+        console.log('📁 Copied image to public folder');
+      }
+      
+      // Use relative path from public folder for storage
+      const relativeImagePath = `images/${productDir}/${firstImageFile}`;
+      
+      // Check if this image was already analyzed (we already checked above, but double-check for other paths)
       const relativePath = path.relative(process.cwd(), firstImage);
-      const existingAnalysis = existingAnalyses.find(a => a.imagePath === relativePath);
+      const existingAnalysis = existingAnalyses.find(a => 
+        a.imagePath === relativePath || 
+        a.imagePath === relativeImagePath
+      );
       
       let productData: ProductData;
       let mlResults: MLSearchResult[];
@@ -64,10 +105,9 @@ export async function processProductImages(imagesDir: string): Promise<void> {
         console.log('\n🔎 Searching Mercado Libre...');
         mlResults = await searchMLProducts(productData);
         
-        // Create analysis object for saving (use relative path)
-        const relativePath = path.relative(process.cwd(), firstImage);
+        // Create analysis object for saving (use public image path)
         const analysis: SavedProductAnalysis = {
-          imagePath: relativePath,
+          imagePath: relativeImagePath,
           productData,
           timestamp: new Date().toISOString(),
           mlResults

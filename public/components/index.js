@@ -1,0 +1,10 @@
+// Component exports for easy importing
+export { App } from './App.js';
+export { Header } from './Header.js';
+export { Footer } from './Footer.js';
+export { LoadingSpinner } from './LoadingSpinner.js';
+export { ErrorMessage } from './ErrorMessage.js';
+export { EmptyState } from './EmptyState.js';
+export { MainContent } from './MainContent.js';
+export { ProductGrid } from './ProductGrid.js';
+export { ProductCard } from './ProductCard.js';
