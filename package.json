@@ -10,6 +10,7 @@
     "frontend": "ts-node src/frontend-server.ts",
     "webhook": "ts-node src/webhook-server.ts",
     "setup-webhook": "ts-node src/setup-webhook.ts",
+    "ml-search": "ts-node scripts/ml-search.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

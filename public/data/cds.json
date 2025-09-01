@@ -1,0 +1,163 @@
+{
+  "products": [
+    {
+      "category": "CD",
+      "title": "Symphony No. 9 d-moll op. 125",
+      "description": "Classical music CD featuring Beethoven's 9th Symphony in D minor",
+      "author": "Ludwig van Beethoven",
+      "label": "Deutsche Grammophon",
+      "product_code": "289461562614",
+      "image_filename": "Foto 15.08.2025, 11 29 53.jpg",
+      "processed_at": "2025-08-15T14:30:08.701Z"
+    },
+    {
+      "category": "CD",
+      "title": "Symphony No. 9 and Other Works",
+      "description": "Classical music CD featuring Dvořák's compositions including Symphony No. 9 and other pieces, Op. 95",
+      "author": "Antonín Dvořák",
+      "label": "Deutsche Grammophon",
+      "product_code": "410 032-2",
+      "image_filename": "Foto 15.08.2025, 11 30 47.jpg",
+      "processed_at": "2025-08-15T14:31:01.944Z"
+    },
+    {
+      "category": "CD",
+      "title": "Symphonie Nr. 1 c-moll op. 68",
+      "description": "Classical music recording featuring Brahms' Symphony No. 1 in C minor, performed by the Wiener Philharmoniker under Leonard Bernstein",
+      "author": "Johannes Brahms (1833-1897)",
+      "label": "Deutsche Grammophon",
+      "image_filename": "Foto 15.08.2025, 11 32 40.jpg",
+      "processed_at": "2025-08-15T14:32:56.633Z"
+    },
+    {
+      "category": "CD",
+      "title": "Konzert für Klavier und Orchester Nr. 1 b-moll op. 23",
+      "description": "Classical music CD featuring Peter Tschaikowsky's Piano Concerto No. 1 in B-flat minor, Op. 23, performed by Sviatoslav Richter on piano with the Vienna Symphony Orchestra",
+      "author": "Peter Tschaikowsky (1840-1893)",
+      "label": "Deutsche Grammophon",
+      "product_code": "STEREO 419 068-2",
+      "image_filename": "Foto 15.08.2025, 11 33 26.jpg",
+      "processed_at": "2025-08-15T14:33:39.945Z"
+    },
+    {
+      "category": "CD",
+      "title": "24 Capricci per violino solo, op. 1",
+      "description": "Classical violin compositions by Niccolò Paganini",
+      "author": "Niccolò Paganini",
+      "label": "Deutsche Grammophon",
+      "product_code": "415 043-2",
+      "image_filename": "Foto 15.08.2025, 11 34 17.jpg",
+      "processed_at": "2025-08-15T14:34:31.257Z"
+    },
+    {
+      "category": "CD",
+      "title": "Beethoven Symphonien No. 1 C-DUR OP. 21 & No. 2 D-DUR OP. 36",
+      "description": "Classical music CD featuring Beethoven's Symphonies No. 1 in C Major and No. 2 in D Major performed by the Berlin Philharmoniker",
+      "author": "Beethoven",
+      "label": "Deutsche Grammophon",
+      "product_code": "POL 925",
+      "image_filename": "Foto 15.08.2025, 11 35 16.jpg",
+      "processed_at": "2025-08-15T14:35:28.956Z"
+    },
+    {
+      "category": "CD",
+      "title": "Franz Schubert: Fantasie C-dur D760 & Klaviersonate a-moll D845",
+      "description": "Classical piano compositions by Franz Schubert, featuring the Wanderer-Fantasie and Piano Sonata in A minor",
+      "author": "Franz Schubert",
+      "label": "Polydor International GmbH, Hamburg",
+      "product_code": "419 672-2",
+      "image_filename": "Foto 15.08.2025, 11 35 58.jpg",
+      "processed_at": "2025-08-15T14:36:11.976Z"
+    },
+    {
+      "category": "CD",
+      "title": "Rachmaninov: Piano Concertos No. 2 & No. 5",
+      "description": "Classical music CD featuring Rachmaninov's Piano Concertos performed by the Warsaw Philharmonic Orchestra",
+      "author": "Sergei Rachmaninov",
+      "label": "Deutsche Grammophon",
+      "product_code": "STEREO 415 119-2 GGH",
+      "image_filename": "Foto 15.08.2025, 11 36 42.jpg",
+      "processed_at": "2025-08-15T14:36:57.997Z"
+    },
+    {
+      "category": "CD",
+      "title": "Placido Domingo",
+      "description": "A classical music CD featuring operatic works by Verdi and other composers",
+      "author": "Placido Domingo",
+      "label": "Deutsche Grammophon",
+      "product_code": "STEREO 415 366-2 GH",
+      "image_filename": "Foto 15.08.2025, 11 37 15.jpg",
+      "processed_at": "2025-08-15T14:37:29.528Z"
+    },
+    {
+      "category": "CD",
+      "title": "Ludwig van Beethoven: Symphonies",
+      "description": "Classical music CD featuring Beethoven's symphonic works including various overtures and orchestral pieces",
+      "author": "Ludwig van Beethoven",
+      "label": "Deutsche Grammophon",
+      "product_code": "STEREO 415 583-2",
+      "image_filename": "Foto 15.08.2025, 11 37 42.jpg",
+      "processed_at": "2025-08-15T14:37:53.279Z"
+    },
+    {
+      "category": "CD",
+      "title": "Polonaises",
+      "description": "Classical music CD featuring polonaise compositions by Frédéric Chopin (1810-1849)",
+      "author": "Frédéric Chopin",
+      "label": "Deutsche Grammophon",
+      "product_code": "STEREO 413 795-2",
+      "image_filename": "Foto 15.08.2025, 11 38 02.jpg",
+      "processed_at": "2025-08-15T14:38:14.889Z"
+    },
+    {
+      "category": "CD",
+      "title": "Camille Saint-Saëns: Symphonie Nr. 3 c-moll op. 78 & Samson et Dalila op. 47",
+      "description": "Classical music CD featuring Saint-Saëns' Symphony No. 3 in C minor and excerpts from Samson et Dalila, performed by the Chicago Symphony Orchestra",
+      "author": "Camille Saint-Saëns",
+      "label": "Deutsche Grammophon",
+      "product_code": "STEREO 415 847-2",
+      "image_filename": "Foto 15.08.2025, 11 38 30.jpg",
+      "processed_at": "2025-08-15T14:38:43.353Z"
+    },
+    {
+      "category": "CD",
+      "title": "Nikolai Rimsky-Korsakov: Scheherazade op. 35",
+      "description": "Classical music recording featuring Rimsky-Korsakov's Symphonic Suite 'Scheherazade' performed by the Berliner Philharmoniker",
+      "author": "Nikolai Rimsky-Korsakov",
+      "label": "Deutsche Grammophon",
+      "product_code": "289 419 063-2",
+      "image_filename": "Foto 15.08.2025, 11 38 57.jpg",
+      "processed_at": "2025-08-15T14:39:10.285Z"
+    },
+    {
+      "category": "CD",
+      "title": "Manuel de Falla (1876-1946)",
+      "description": "Classical music collection featuring works by Manuel de Falla, including 'El sombrero de tres picos' and 'El amor brujo' performed by the Boston Symphony Orchestra",
+      "author": "Manuel de Falla",
+      "label": "Deutsche Grammophon",
+      "product_code": "STEREO 429 181-2 GGA",
+      "image_filename": "Foto 15.08.2025, 11 39 17.jpg",
+      "processed_at": "2025-08-15T14:39:31.516Z"
+    },
+    {
+      "category": "CD",
+      "title": "Gioachino Rossini (1792-1868)",
+      "description": "A classical music CD featuring various Rossini overtures and compositions performed by The Chamber Orchestra of Europe under Claudio Abbado",
+      "author": "Gioachino Rossini",
+      "label": "Deutsche Grammophon",
+      "product_code": "431 653-2",
+      "image_filename": "Foto 15.08.2025, 11 39 38.jpg",
+      "processed_at": "2025-08-15T14:39:52.464Z"
+    },
+    {
+      "category": "CD",
+      "title": "Johann Strauss",
+      "description": "A classical music CD featuring works by Johann Strauss, performed by the Berliner Philharmoniker under Herbert von Karajan",
+      "author": "Johann Strauss",
+      "label": "Deutsche Grammophon",
+      "product_code": "POL 924",
+      "image_filename": "Foto 15.08.2025, 11 39 59.jpg",
+      "processed_at": "2025-08-15T14:40:12.234Z"
+    }
+  ]
+}
